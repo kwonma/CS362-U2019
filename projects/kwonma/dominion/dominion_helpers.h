@@ -12,4 +12,15 @@ int getCost(int cardNumber);
 int cardEffect(int card, int choice1, int choice2, int choice3, 
 	       struct gameState *state, int handPos, int *bonus);
 
+// added functions from assignment 2
+int whoIsNext(struct gameState *state);
+int errorCheck(int a, int b, int c); // choices a and b are fields to compare, int c gives the operation
+int drawFourNew(struct gameState * state, int handpos, int currentplayer);
+
+int playMinion(struct gameState * state, int choice1, int choice2, int handPos, int currentPlayer);
+//int playBaron(struct gameState * state, int choice1, int choice2, );
+//int playAmbassador(struct gameState * state, int choice1, int choice2, );
+//int playMine(struct gameState * state, int choice1, int choice2);
+//int playTribute(struct gameState * state, int choice1, int choice2, );
+
 #endif
