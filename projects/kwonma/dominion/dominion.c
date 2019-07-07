@@ -1169,11 +1169,15 @@ int playMinion(struct gameState * state, int choice1, int choice2, int handPos, 
 	if (choice1)		//+2 coins
 	{
 		state->coins = state->coins + 2;
-	}
+	//} //BUG
+/*	MINION BUG#1 COMBINING BOTH OPTIONS INTO CHOICE1	*/
 
-	else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
-	{
-		drawFourNew(state, handPos, currentPlayer);				
+	//else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
+	//{
+
+ /*	MINION BUG#2 INCREMENTING HANDPOS INTO THE DRAWFOURNEW() FUNCTION */
+
+		drawFourNew(state, handPos + 1, currentPlayer);				
 		//other players discard hand and redraw if hand size > 4
 		for (i = 0; i < state->numPlayers; i++)
 		{
@@ -1191,10 +1195,9 @@ int playMinion(struct gameState * state, int choice1, int choice2, int handPos, 
 }
 
 int playAmbassador(struct gameState * state, int choice1, int choice2, int handPos, int currentPlayer) {
-
 	int i, j = 0;		//used to check if player has enough cards to discard
-
-	if (choice2 > 2 || choice2 < 0)
+	/*	AMBASSADOR BUG#1 CHANGE THE 'OR' TO 'AND' IN ERROR CHECK BELOW	*/
+	if (choice2 > 2 && choice2 < 0)
 	{
 		return -1;				
 	}
@@ -1211,14 +1214,14 @@ int playAmbassador(struct gameState * state, int choice1, int choice2, int handP
 			j++;
 		}
 	}
-	if (j < choice2)
+	/*	AMBASSADOR BUG#2 CHANGING THE IF STATEMENT CONDITION FROM < TO <=	*/
+	if (j <= choice2) //BUG
 	{
 		return -1;				
 	}
 
 	if (DEBUG) 
 		printf("Player %d reveals card number: %d\n", currentPlayer, state->hand[currentPlayer][choice1]);
-
 	//increase supply count for choosen card by amount being discarded
 	state->supplyCount[state->hand[currentPlayer][choice1]] += choice2;
 
@@ -1246,7 +1249,6 @@ int playAmbassador(struct gameState * state, int choice1, int choice2, int handP
 			}
 		}
 	}			
-
 	return 0;
 }
 
@@ -1280,18 +1282,24 @@ int playMine(struct gameState * state, int choice1, int choice2, int handPos, in
 		if (state->hand[currentPlayer][i] == j)
 		{
 			discardCard(i, currentPlayer, state, 0);			
-			break;
+			/*	MINE BUG#1 REMOVAL OF THE BREAK STATEMENT WHEN CARD FOUND 	*/
+			//break;
 		}
 	}
+/*	MINE BUG#2 USER REGAINS 3 CARDS OF THE ONE SELECTED TO TRASH INTO DECK		*/
+	for (int i = 0; i < 3; i++) {
+		gainCard(j, state, 1, currentPlayer);
+	} //END OF BUG
 
 	return 0;
 }
 
 int playBaron(struct gameState * state, int choice1, int choice2, int currentPlayer) {
-
 	state->numBuys++;//Increase buys by 1!
 	if (choice1 > 0){//Boolean true or going to discard an estate
-		int p = 0;//Iterator for hand!
+		//int p = 0;//Iterator for hand!
+		/*	BARON BUG#1 CHANGE ITERATOR START TO -1 FROM 0	*/
+		int p = -1; // bug should break code
 		int card_not_discarded = 1;//Flag for discard set!
 		while(card_not_discarded){
 			if (state->hand[currentPlayer][p] == estate){//Found an estate card!
@@ -1310,7 +1318,8 @@ int playBaron(struct gameState * state, int choice1, int choice2, int currentPla
 					printf("No estate cards in your hand, invalid choice\n");
 					printf("Must gain an estate if there are any\n");
 				}
-				if (supplyCount(estate, state) > 0){
+				/* 	BARON BUG#2 CHANGED IF STATEMENT > TO >= 	*/
+				if (supplyCount(estate, state) >= 0){ // BUG
 					gainCard(estate, state, 0, currentPlayer);
 					state->supplyCount[estate]--;//Decrement estates
 					if (supplyCount(estate, state) == 0){
@@ -1336,15 +1345,15 @@ int playBaron(struct gameState * state, int choice1, int choice2, int currentPla
 		}
 	}
 
-
 	return 0;
 }
 
 int playTribute(struct gameState * state, int choice1, int choice, int currentPlayer) {
 	int tributeRevealedCards[2] = {-1, -1};
-	int nextPlayer = whoIsNext(state);
+	/*	TRIBUTE BUG #1 NOT USING FUNCTION TO FIND NEXT PLAYER	*/
+	int nextPlayer = currentPlayer + 1;
+	// int nextPlayer = whoIsNext(state);
 	int i;
-
 	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1){
 		if (state->deckCount[nextPlayer] > 0){
 			tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
@@ -1361,7 +1370,6 @@ int playTribute(struct gameState * state, int choice1, int choice, int currentPl
 			}
 		}
 	}
-
 	else{
 		if (state->deckCount[nextPlayer] == 0){
 			for (i = 0; i < state->discardCount[nextPlayer]; i++){
@@ -1375,23 +1383,21 @@ int playTribute(struct gameState * state, int choice1, int choice, int currentPl
 		} 
 		tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
 		state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-		state->deckCount[nextPlayer]--;
+		/*  	TRIBUTE BUG #2 REMOVAL OF DECREMENT STATEMENTS	    */
+		// state->deckCount[nextPlayer]--;
 		tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
 		state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-		state->deckCount[nextPlayer]--;
+		// state->deckCount[nextPlayer]--;
 	}    
-
 	if (tributeRevealedCards[0] == tributeRevealedCards[1]){//If we have a duplicate card, just drop one 
 		state->playedCards[state->playedCardCount] = tributeRevealedCards[1];
 		state->playedCardCount++;
 		tributeRevealedCards[1] = -1;
 	}
-
 	for (i = 0; i <= 2; i ++){
 		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold){//Treasure cards
 			state->coins += 2;
 		}
-
 		else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall){//Victory Card Found
 			drawCard(currentPlayer, state);
 			drawCard(currentPlayer, state);
@@ -1400,7 +1406,6 @@ int playTribute(struct gameState * state, int choice1, int choice, int currentPl
 			state->numActions = state->numActions + 2;
 		}
 	}
-
 	return 0;
 }
 
