@@ -19,8 +19,8 @@ int drawFourNew(struct gameState * state, int handpos, int currentplayer);
 
 int playMinion(struct gameState * state, int choice1, int choice2, int handPos, int currentPlayer);
 //int playBaron(struct gameState * state, int choice1, int choice2, );
-//int playAmbassador(struct gameState * state, int choice1, int choice2, );
-//int playMine(struct gameState * state, int choice1, int choice2);
+int playAmbassador(struct gameState * state, int choice1, int choice2, int handPos, int currentPlayer);
+int playMine(struct gameState * state, int choice1, int choice2, int hanPos, int currentPlayer);
 //int playTribute(struct gameState * state, int choice1, int choice2, );
 
 #endif
