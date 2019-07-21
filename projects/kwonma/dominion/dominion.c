@@ -383,7 +383,7 @@ int endTurn(struct gameState *state) {
 	}
 
 	//Update money
-	updateCoins(state->whoseTurn, state , 0);
+	updateCoins(state->whoseTurn, state, 0);
 
 	return 0;
 }

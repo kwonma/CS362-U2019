@@ -42,7 +42,7 @@ cardtest4: cardtest4.c rngs.o dominion.o
 	gcc -o cardtest4 -g cardtest4.c dominion.o rngs.o $(CFLAGS)
 
 cardtest5: cardtest5.c rngs.o dominion.o
-	gcc -o cardtest5 -g cardtest4.c dominion.o rngs.o $(CFLAGS)
+	gcc -o cardtest5 -g cardtest5.c dominion.o rngs.o $(CFLAGS)
 
 cardtestresults: cardtest1 cardtest2 cardtest3 cardtest4 cardtest5 rngs.o dominion.o 
 	echo "Results for card tests on dominion code " > unittestresults.out
