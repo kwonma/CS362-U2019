@@ -45,31 +45,31 @@ cardtest5: cardtest5.c rngs.o dominion.o
 	gcc -o cardtest5 -g cardtest5.c dominion.o rngs.o $(CFLAGS)
 
 cardtestresults: cardtest1 cardtest2 cardtest3 cardtest4 cardtest5 rngs.o dominion.o 
-	echo "Results for card tests on dominion code " > unittestresults.out
-	echo "cardtest1.c: " >> unittestresults.out
-	./cardtest1 >> unittestresults.out 
-	gcov cardtest1 >> unittestresults.out
-	cat cardtest1.c.gcov >> unittestresults.out
+	echo "Results for card tests on dominion code " > cardtestresults.out
+	echo "cardtest1.c: " >> cardtestresults.out
+	./cardtest1 >> cardtestresults.out 
+	gcov dominion.c -b -f >> cardtestresults.out
+#	cat cardtest1.c.gcov >> cardtestresults.out
 	
-	echo "cardtest2.c: " >> unittestresults.out
-	./cardtest2 >> unittestresults.out 
-	gcov cardtest2 >> unittestresults.out
-	cat cardtest2.c.gcov >> unittestresults.out
+	echo "cardtest2.c: " >> cardtestresults.out
+	./cardtest2 >> cardtestresults.out 
+	gcov dominion.c -b -f >> cardtestresults.out
+#	cat cardtest2.c.gcov >> cardtestresults.out
 	
-	echo "cardtest3.c: " >> unittestresults.out
-	./cardtest3 >> unittestresults.out 
-	gcov cardtest3 >> unittestresults.out
-	cat cardtest3.c.gcov >> unittestresults.out
+	echo "cardtest3.c: " >> cardtestresults.out
+	./cardtest3 >> cardtestresults.out 
+	gcov dominion.c -b -f >> cardtestresults.out
+#	cat cardtest3.c.gcov >> cardtestresults.out
 	
-	echo "cardtest4.c: " >> unittestresults.out
-	./cardtest4 >> unittestresults.out 
-	gcov cardtest4 >> unittestresults.out
-	cat cardtest4.c.gcov >> unittestresults.out
+	echo "cardtest4.c: " >> cardtestresults.out
+	./cardtest4 >> cardtestresults.out 
+	gcov dominion.c -b -f >> cardtestresults.out
+#	cat cardtest4.c.gcov >> cardtestresults.out
 	
-	echo "cardtest5.c: " >> unittestresults.out
-	./cardtest5 >> unittestresults.out 
-	gcov cardtest5 >> unittestresults.out
-	cat cardtest5.c.gcov >> unittestresults.out
+	echo "cardtest5.c: " >> cardtestresults.out
+	./cardtest5 >> cardtestresults.out 
+	gcov dominion.c -b -f >> cardtestresults.out
+#	cat cardtest5.c.gcov >> cardtestresults.out
 	
 unittest1: unittest1.c rngs.o dominion.o
 	gcc -o unittest1 -g unittest1.c dominion.o rngs.o $(CFLAGS)
@@ -86,32 +86,34 @@ unittest4: unittest4.c rngs.o dominion.o
 unittest5: unittest5.c rngs.o dominion.o
 	gcc -o unittest5 -g unittest5.c dominion.o rngs.o  $(CFLAGS)
 
-unittestresults: unittest1.c unittest2.c unittest3.c unittest4.c unittest5.c dominion.o cardtestresults
-	echo "Results for unit tests on refactored code: " >> unittestresults.out
+unittestresults: unittest1 unittest2 unittest3 unittest4 unittest5 dominion.o cardtestresults
+	echo "Results for unit tests on refactored code: " > unittestresults.out
 	echo "unittest1.c: " >> unittestresults.out
 	./unittest1 >> unittestresults.out 
-	gcov unittest1 >> unittestresults.out
-	cat unittest1.c.gcov >> unittestresults.out	
+	gcov dominion.c -b -f >> unittestresults.out
+#	cat unittest1.c.gcov >> unittestresults.out	
 	
 	echo "unittest2.c: " >> unittestresults.out
 	./unittest2 >> unittestresults.out 
-	gcov unittest2 >> unittestresults.out
-	cat unittest2.c.gcov >> unittestresults.out	
+	gcov dominion.c -b -f >> unittestresults.out
+#	cat unittest2.c.gcov >> unittestresults.out	
 	
 	echo "unittest3.c: " >> unittestresults.out
 	./unittest3 >> unittestresults.out 
-	gcov unittest3 >> unittestresults.out
-	cat unittest3.c.gcov >> unittestresults.out	
+	gcov dominion.c -b -f >> unittestresults.out
+#	cat unittest3.c.gcov >> unittestresults.out	
 	
 	echo "unittest4.c: " >> unittestresults.out
-	./unittest4 >> unittestresults.out 
-	gcov unittest4 >> unittestresults.out
-	cat unittest4.c.gcov >> unittestresults.out	
+#	./unittest4 >> unittestresults.out 
+#	gcov dominion.c >> unittestresults.out
+#	cat unittest4.c.gcov >> unittestresults.out	
 	
 	echo "unittest5.c: " >> unittestresults.out
 	./unittest5 >> unittestresults.out 
-	gcov unittest5 >> unittestresults.out
-	cat unittest5.c.gcov >> unittestresults.out	
+	gcov dominion.c -b -f >> unittestresults.out
+#	cat unittest5.c.gcov >> unittestresults.out	
+	
+	cat cardtestresults >> unittestresults.out
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
