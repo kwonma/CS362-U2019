@@ -1412,4 +1412,4 @@ int playTribute(struct gameState * state, int choice1, int choice, int currentPl
 // end of changes 
 
 //end of dominion.c
-
+                        shuff
