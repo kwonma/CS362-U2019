@@ -1144,9 +1144,9 @@ int errorCheck(int a, int b, int c) {
 //discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
 int drawFourNew(struct gameState * state, int handPos, int currentPlayer) {
 	//discard hand
-	while(numHandCards(state) > 0)
+	while(state->handCount[currentPlayer] > 0)
 	{
-		discardCard(handPos, currentPlayer, state, 0);
+		discardCard(handPos, currentPlayer, state, 1);
 	}
 
 	//draw 4
@@ -1164,20 +1164,20 @@ int playMinion(struct gameState * state, int choice1, int choice2, int handPos, 
 	state->numActions++;
 
 	//discard card from hand
-	discardCard(handPos, currentPlayer, state, 0);
+	discardCard(handPos, currentPlayer, state, 1);
 
 	if (choice1)		//+2 coins
 	{
 		state->coins = state->coins + 2;
 	//} //BUG
-/*	MINION BUG#1 COMBINING BOTH OPTIONS INTO CHOICE1	*/
+/*	MINION BUG#2 COMBINING BOTH OPTIONS INTO CHOICE1	*/
 
 	//else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
 	//{
 
- /*	MINION BUG#2 INCREMENTING HANDPOS INTO THE DRAWFOURNEW() FUNCTION */
 
-		drawFourNew(state, handPos + 1, currentPlayer);				
+ /*	MINION BUG#2 REMOVING THE STEP OF RESHUFFLNG HAND */
+//		drawFourNew(state, handPos, currentPlayer);				
 		//other players discard hand and redraw if hand size > 4
 		for (i = 0; i < state->numPlayers; i++)
 		{
@@ -1185,7 +1185,7 @@ int playMinion(struct gameState * state, int choice1, int choice2, int handPos, 
 			{
 				if ( state->handCount[i] > 4 )
 				{
-					drawFourNew(state, handPos, currentPlayer);				
+//					drawFourNew(state, handPos, i);				
 				}
 			}
 		}
@@ -1298,31 +1298,27 @@ int playBaron(struct gameState * state, int choice1, int choice2, int currentPla
 	state->numBuys++;//Increase buys by 1!
 	if (choice1 > 0){//Boolean true or going to discard an estate
 		//int p = 0;//Iterator for hand!
-		/*	BARON BUG#1 CHANGE ITERATOR START TO -1 FROM 0	*/
-		int p = -1; // bug should break code
+		int p = 0; 
 		int card_not_discarded = 1;//Flag for discard set!
 		while(card_not_discarded){
 			if (state->hand[currentPlayer][p] == estate){//Found an estate card!
 				state->coins += 4;//Add 4 coins to the amount of coins
 				state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
 				state->discardCount[currentPlayer]++;
-				for (;p < state->handCount[currentPlayer]; p++){
-					state->hand[currentPlayer][p] = state->hand[currentPlayer][p+1];
-				}
+				/*	BARON BUG#1 Remove code to shift back deck	*/
+				//for (;p < state->handCount[currentPlayer]; p++){
+				//	state->hand[currentPlayer][p] = state->hand[currentPlayer][p+1];
+				//}
 				state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
 				state->handCount[currentPlayer]--;
 				card_not_discarded = 0;//Exit the loop
 			}
 			else if (p > state->handCount[currentPlayer]){
-				if(DEBUG) {
-					printf("No estate cards in your hand, invalid choice\n");
-					printf("Must gain an estate if there are any\n");
-				}
 				/* 	BARON BUG#2 CHANGED IF STATEMENT > TO >= 	*/
 				if (supplyCount(estate, state) >= 0){ // BUG
 					gainCard(estate, state, 0, currentPlayer);
 					state->supplyCount[estate]--;//Decrement estates
-					if (supplyCount(estate, state) == 0){
+					if (supplyCount(estate, state) <= 0){
 						isGameOver(state);
 					}
 				}
@@ -1338,8 +1334,8 @@ int playBaron(struct gameState * state, int choice1, int choice2, int currentPla
 	else{
 		if (supplyCount(estate, state) > 0){
 			gainCard(estate, state, 0, currentPlayer);//Gain an estate
-			state->supplyCount[estate]--;//Decrement Estates
-			if (supplyCount(estate, state) == 0){
+			state->supplyCount[estate]--;//Decrement Estates BUG! estates already decremented in GainCard() function
+			if (supplyCount(estate, state) <= 0){
 				isGameOver(state);
 			}
 		}
@@ -1351,8 +1347,8 @@ int playBaron(struct gameState * state, int choice1, int choice2, int currentPla
 int playTribute(struct gameState * state, int choice1, int choice, int currentPlayer) {
 	int tributeRevealedCards[2] = {-1, -1};
 	/*	TRIBUTE BUG #1 NOT USING FUNCTION TO FIND NEXT PLAYER	*/
-	int nextPlayer = currentPlayer + 1;
-	// int nextPlayer = whoIsNext(state);
+	//int nextPlayer = currentPlayer + 1;
+	int nextPlayer = whoIsNext(state);
 	int i;
 	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1){
 		if (state->deckCount[nextPlayer] > 0){
