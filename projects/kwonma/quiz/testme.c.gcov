@@ -1,0 +1,155 @@
+        -:    0:Source:testme.c
+        -:    0:Graph:testme.gcno
+        -:    0:Data:testme.gcda
+        -:    0:Runs:2
+        -:    0:Programs:1
+        -:    1:#include<stdio.h>
+        -:    2:#include<string.h>
+        -:    3:#include<stdlib.h>
+        -:    4:#include<time.h>
+        -:    5:#include<string.h>
+        -:    6:
+function inputChar called 2000002 returned 100% blocks executed 100%
+  2000002:    7:char inputChar(int state, int tcCount)
+        -:    8:{
+        -:    9:	// code to get to state 9 should execute 477 times ...
+  2000002:   10:	if(state < 9){
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+      954:   11:		return (char)(tcCount % 128);
+        -:   12:	}
+        -:   13:	else  {
+  1999048:   14:		return ' ';
+        -:   15:	}
+        -:   16:}
+        -:   17:
+function inputString called 2000002 returned 100% blocks executed 100%
+  2000002:   18:char *inputString(int state, int tcCount)
+        -:   19:{
+        -:   20:	int i;
+        -:   21:	// check if time to start testing string input
+  2000002:   22:	if (state == 9) {
+branch  0 taken 99% (fallthrough)
+branch  1 taken 1%
+  1999048:   23:		int charCount = tcCount % 10;
+  1999048:   24:		char output[charCount];
+ 10994764:   25:		for(i = 0; i < (charCount); i++){
+branch  0 taken 82%
+branch  1 taken 18% (fallthrough)
+        -:   26:			//generate all ASCII values 0-127
+  8995716:   27:			output[i] = (char)(rand() % 128);
+call    0 returned 100%
+        -:   28:		} 
+  1999048:   29:		return output;
+        -:   30:	}
+        -:   31:	else { // no point testing this until it can be confirmed
+      954:   32:		return "";
+        -:   33:	}
+        -:   34:}
+        -:   35:
+function testme called 2 returned 0% blocks executed 88%
+        2:   36:void testme()
+        -:   37:{
+        2:   38:	int tcCount = 0;
+        -:   39:	char *s;
+        -:   40:	char c;
+        2:   41:	int state = 0;
+        -:   42:	while (1)
+        -:   43:	{
+  2000002:   44:		tcCount++;
+  2000002:   45:		c = inputChar(state, tcCount);
+call    0 returned 100%
+  2000002:   46:		s = inputString(state, tcCount);
+call    0 returned 100%
+  2000002:   47:		printf("Iteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
+call    0 returned 100%
+        -:   48:
+  2000002:   49:		if (c == '[' && state == 0) state = 1;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 25% (fallthrough)
+branch  3 taken 75%
+  2000002:   50:		if (c == '(' && state == 1) state = 2;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 25% (fallthrough)
+branch  3 taken 75%
+  2000002:   51:		if (c == '{' && state == 2) state = 3;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 33% (fallthrough)
+branch  3 taken 67%
+  2000002:   52:		if (c == ' '&& state == 3) state = 4;
+branch  0 taken 99% (fallthrough)
+branch  1 taken 1%
+branch  2 taken 1% (fallthrough)
+branch  3 taken 99%
+  2000002:   53:		if (c == 'a' && state == 4) state = 5;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 33% (fallthrough)
+branch  3 taken 67%
+  2000002:   54:		if (c == 'x' && state == 5) state = 6;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 33% (fallthrough)
+branch  3 taken 67%
+  2000002:   55:		if (c == '}' && state == 6) state = 7;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 33% (fallthrough)
+branch  3 taken 67%
+  2000002:   56:		if (c == ')' && state == 7) state = 8;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 25% (fallthrough)
+branch  3 taken 75%
+  2000002:   57:		if (c == ']' && state == 8) state = 9;
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 25% (fallthrough)
+branch  3 taken 75%
+  2000002:   58:		if (s[0] == 'r' && s[1] == 'e'
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+branch  2 taken 1% (fallthrough)
+branch  3 taken 99%
+      115:   59:				&& s[2] == 's' && s[3] == 'e'
+branch  0 taken 2% (fallthrough)
+branch  1 taken 98%
+branch  2 taken 0% (fallthrough)
+branch  3 taken 100%
+    #####:   60:				&& s[4] == 't' && s[5] == '\0'
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+    #####:   61:				&& state == 9)
+branch  0 never executed
+branch  1 never executed
+        -:   62:		{
+    #####:   63:			printf("error ");
+call    0 never executed
+    #####:   64:			exit(200);
+call    0 never executed
+        -:   65:		}
+  2000002:   66:		if (tcCount > 1000000) {
+branch  0 taken 1% (fallthrough)
+branch  1 taken 99%
+        2:   67:			exit(10);
+call    0 returned 0%
+        -:   68:		}
+  2000000:   69:	}
+        -:   70:}
+        -:   71:
+        -:   72:
+function main called 2 returned 0% blocks executed 80%
+        2:   73:int main(int argc, char *argv[])
+        -:   74:{
+        2:   75:	srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        2:   76:	testme();
+call    0 returned 0%
+    #####:   77:	return 0;
+        -:   78:}
