@@ -25,6 +25,7 @@ int main() {
 		for (j = 0; j < sizeof(struct gameState); j++) {
 			((char*)&G1)[j] = rand() % 256; 		
 		}
+		G1.whoseTurn = 0;
 		// adjust starting players
 		p = (rand() % 4);
 		G1.deckCount[p] = (rand() % MAX_DECK);

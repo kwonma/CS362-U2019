@@ -33,7 +33,7 @@ int main() {
 			coinCount++; 
 		}
 	}
-	if(minionCard( 1, 0, &G, i)) {
+	minionCard( 1, 0, &G, i);
 		if(G.numActions != 1) {	
 			printf("	test 1 failed: choicee 2 did not increment actions\n");
 		}
@@ -45,7 +45,6 @@ int main() {
 		if(temp != coinCount+2) {
 			printf("	Test 1 failed: did not increment coins\n");
 		} 
-	}
 
 	// test choice 2 if no players have + 4 cards
 	memset(&G, 23, sizeof(struct gameState));   // clear the game state
@@ -57,7 +56,7 @@ int main() {
 	}
 	i = G.handCount[G.whoseTurn];
 	G.hand[G.whoseTurn][i] = minion;
-	if(minionCard(0,2, &G, i)) {
+	minionCard(0,2, &G, i); 
 		if(G.numActions != 1) {	
 			printf("	test 2 failed: choicee 2 did not increment actions\n");
 		}
@@ -68,7 +67,6 @@ int main() {
 				}	
 			}
 		}
-	}
 	// test choice 2 if players have 5+ cards
 	memset(&G, 23, sizeof(struct gameState));   // clear the game state
 	r = initializeGame(numPlayers, k, seed, &G); // initialize a new game
@@ -79,7 +77,7 @@ int main() {
 	}
 	i = G.handCount[G.whoseTurn];
 	G.hand[G.whoseTurn][i] = minion;
-	if(minionCard(0 ,2, &G, i)) {
+	minionCard(0 ,2, &G, i);
 		if(G.numActions != 1) {	
 			printf("	test 3 failed: choicee 2 did not increment actions\n");
 		}
@@ -90,7 +88,6 @@ int main() {
 				}	
 			}
 		}
-	}
 	printf("	All tests passed: No bugs detected\n");
 	return 0;
 }

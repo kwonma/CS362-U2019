@@ -59,6 +59,7 @@ int main() {
 			// test for either option that function returns 0
 			r = minionCard(rand1, rand2, &G1, 0);
 			//	printf("	Minion output for random test 1: %d\n", r);
+			printf("	G1 (%d) num actions %d, G2 (%d) num actions %d\n", G1.whoseTurn, G1.numActions, G2.whoseTurn, G2.numActions);
 			assert(r==0);
 			assert(G1.numActions == G2.numActions + 1);
 			assert(G1.handCount[p] == G2.handCount[p]-1);
