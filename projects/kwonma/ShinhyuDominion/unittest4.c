@@ -33,8 +33,7 @@ int main() {
 			coinCount++; 
 		}
 	}
-	printf("stop here means that playMinion causes a seg fault\n");
-	if(playMinion(&G, 1, 0, i, 0)) {
+	if(minionCard( 1, 0, &G, i)) {
 		if(G.numActions != 1) {	
 			printf("	test 1 failed: choicee 2 did not increment actions\n");
 		}
@@ -52,11 +51,13 @@ int main() {
 	memset(&G, 23, sizeof(struct gameState));   // clear the game state
 	r = initializeGame(numPlayers, k, seed, &G); // initialize a new game
 	for(i = 0; i < numPlayers; i++) {
-		drawFourNew(&G, G.handCount[i], i);
+		for(j = 0; j < 4; j++){
+			drawCard(i, &G);
+		}
 	}
 	i = G.handCount[G.whoseTurn];
 	G.hand[G.whoseTurn][i] = minion;
-	if(playMinion(&G, 0, 2, i, 0)) {
+	if(minionCard(0,2, &G, i)) {
 		if(G.numActions != 1) {	
 			printf("	test 2 failed: choicee 2 did not increment actions\n");
 		}
@@ -78,7 +79,7 @@ int main() {
 	}
 	i = G.handCount[G.whoseTurn];
 	G.hand[G.whoseTurn][i] = minion;
-	if(playMinion(&G, 0, 2, i, 0)) {
+	if(minionCard(0 ,2, &G, i)) {
 		if(G.numActions != 1) {	
 			printf("	test 3 failed: choicee 2 did not increment actions\n");
 		}

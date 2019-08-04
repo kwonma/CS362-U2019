@@ -32,7 +32,7 @@ int main() {
 	// test that ambassador can be played
 	i = G.handCount[G.whoseTurn];
 	G.hand[G.whoseTurn][i] = ambassador;  // give player ambassador
-	if(playAmbassador(&G, i, 0, i, whoseTurn)) {
+	if(ambassadorCard(i, 0, &G, i-1)) {
 		for(j = 0; j < numPlayers; j++) {
 			if(j != G.whoseTurn) {
 
@@ -51,7 +51,7 @@ int main() {
 	G.hand[G.whoseTurn][i+1] = curse;
 	G.hand[G.whoseTurn][i+2] = curse;
 	G.hand[G.whoseTurn][i+3] = curse;
-	if(playAmbassador(&G, i+1, 2, i, G.whoseTurn)) {
+	if(ambassadorCard(i+1, 2, &G, i)) {
 		//printf("	Test 2: send curse with 2 copies; Next player [3] should have curse added at the end of their hand: %d\n", G.hand[3][G.handCount[3]-1]);
 		if(G.hand[3][G.handCount[3]-1] != curse) {
 			printf("	test 2 failed: curse was not sent to other players\n");	

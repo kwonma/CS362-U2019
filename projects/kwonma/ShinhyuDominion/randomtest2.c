@@ -18,8 +18,15 @@ int main() {
 	int rand1, rand2, rand3, rand4;
 	int error_flag = 0;
 	srand(time(0));
+	int cards[10];
 
 	for(i = 0; i < 1000; i++) {
+		for(j = 0; j < sizeof(int); j++) {
+			cards[j] = rand() % (treasure_map);
+		}
+		rand3 = (rand() % INT_MAX);	
+		initializeGame(4, cards, rand3, &G1);
+		G1.whoseTurn = 0;
 		error_flag = 0;
 		printf("%d", i);
 		/* START SETTING UP HAND */
@@ -50,7 +57,7 @@ int main() {
 
 		if (i % 3 == 0) { // run test 1
 			// test for either option that function returns 0
-			r = playMinion(&G1, rand1, rand2, 0, p);
+			r = minionCard(rand1, rand2, &G1, 0);
 			//	printf("	Minion output for random test 1: %d\n", r);
 			assert(r==0);
 			assert(G1.numActions == G2.numActions + 1);
@@ -59,7 +66,7 @@ int main() {
 		}
 		else if( i % 3 == 1 ) { // run test 2
 			// test for discard card form hand and +2 coins for choice 1
-			r = playMinion(&G1, rand3, 0, 0, p);
+			r = minionCard(rand3, 0, &G1, 0);
 			//printf("	Minion output for random test 2: %d\n", r);
 			if(G1.coins != G2.coins + 2) { 
 				error_flag = 1;
@@ -89,7 +96,7 @@ int main() {
 		}
 		else if(i % 3 == 2) { // run test 3
 			// test for any integer value > 0 for choice 2
-			r = playMinion(&G1, 0, rand4, 0, p);
+			r = minionCard(0, rand4, &G1, 0);
 			//printf("	Minion output for random test 3: %d\n", r);
 			if(G1.coins != G2.coins) { 
 				error_flag = 1;

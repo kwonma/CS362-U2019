@@ -106,7 +106,7 @@ int main() {
 		memcpy(&G2, &G1, sizeof(struct gameState)); // make copy of gameState to compare G2 to G1
 
 
-		r = playTribute(&G1, rand1, rand2, p);
+		r = tributeCard(&G1);
 		assert(r == 0);
 		// test 1: case if only one card to pull from deck
 		if(G2.deckCount[next] + G2.discardCount[next] == 1) {

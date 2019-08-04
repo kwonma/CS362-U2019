@@ -12,6 +12,8 @@
 #include <assert.h>
 #include "rngs.h"
 
+// Bill Baron(choice1, gameState, handpos);
+
 int main() {
 	int i,j;
 	int seed = 1000;
@@ -23,8 +25,10 @@ int main() {
 
 	memset(&G, 23, sizeof(struct gameState));   // clear the game state
 	r = initializeGame(numPlayers, k, seed, &G); // initialize a new game
+	endTurn(&G);
+	G.hand[1][0] = baron;
 	// gain an estate
-	if (playBaron(&G, 0, 1, 1)) {
+	if(baronCard(0, &G, 0)) {
 		if(G.hand[1][G.handCount[1]-1] != estate) {
 			printf("	Test 1 failed: did not gain an estate at the end of player's hand: %d\n", G.hand[1][G.handCount[1]-1]);
 		}
@@ -35,12 +39,15 @@ int main() {
 	// gain an estate when there's nothing left
 	int estateCount=0;
 	G.supplyCount[estate] = 0;
-	for(i = 0; i < G.handCount[2]; i++) {
-		if(G.hand[2][i] == estate) {
+	endTurn(&G);
+	endTurn(&G);
+	G.hand[2][0] = baron;
+	for(i = 0; i < G.handCount[2]; i++) {	
+	if(G.hand[2][i] == estate) {
 			estateCount++; 
 		}
 	}
-	if(playBaron(&G, 0, 1, 2)) {
+	if(baronCard(0, &G, 0)) {
 		int temp =0;
 		for(i = 0; i < G.handCount[2]; i++) {
 			if(G.hand[2][i] == estate) {
@@ -55,7 +62,10 @@ int main() {
 
 	memset(&G, 23, sizeof(struct gameState));   // clear the game state
 	r = initializeGame(numPlayers, k, seed, &G); // initialize a new game
-
+	endTurn(&G);
+	endTurn(&G);
+	endTurn(&G);
+	G.hand[3][0] = baron;
 	// trash an estate 
 	estateCount=0; int coinCount=0;
 	for(i = 0; i < G.handCount[3]; i++) {
@@ -66,7 +76,7 @@ int main() {
 			coinCount++; 
 		}
 	}
-	if(playBaron(&G, 1, 0, 3)) {
+	if(baronCard(1, &G, 0)) {
 		int temp = 0, coin = 0;
 		for(i = 0; i < G.handCount[3]; i++) {
 			if(G.hand[3][i] == estate) {

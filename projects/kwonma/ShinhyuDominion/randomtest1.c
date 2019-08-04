@@ -13,9 +13,10 @@
 int main() {
 	struct gameState G1, G2; // define generic game state
 	int i,j, r, p, temp;
-	int rand1, rand2, rand3, rand4;
+	int rand1;
 	int supply_count, estate_count;
 
+	rand1 = (rand() % 2); // 50% change of entering in yes or no for choice1 and choice2
 	srand(time(0));
 
 	for(i = 0; i < 10000; i++) {
@@ -38,7 +39,7 @@ int main() {
 		if(i % 10 == 0) { // will set supply of estates to 0
 			supply_count = 0;
 			G1.supplyCount[estate] = supply_count;
-		//	printf("Supply Count = %d\n", G1.supplyCount[estate]);
+			//	printf("Supply Count = %d\n", G1.supplyCount[estate]);
 		}
 		if((i + 5) % 10 == 0) {
 			supply_count = 1;
@@ -47,12 +48,6 @@ int main() {
 		else { 
 			supply_count = (rand() % INT_MAX);
 			G1.supplyCount[estate] = supply_count;
-		}
-		if(i % 30 == 0) {
-			estate_count = 0; 
-		}
-		else {
-			estate_count = (rand() % (supply_count)); 
 		}
 		// assign hand
 		G1.hand[p][0] = baron;
@@ -68,30 +63,35 @@ int main() {
 		/* FINISHED SETTING UP HAND */
 		memcpy(&G2, &G1, sizeof(struct gameState)); // make copy of gameState to compare G2 to G1
 
-		rand1 = (rand() % 2); // 50% change of entering in yes or no for choice1 and choice2
-		rand2 = (rand() % 2);
-		rand3 = (rand() % (INT_MAX -1)) + 1;
-		rand4 = (rand() % (INT_MAX -1)) + 1;
 
 		if (i % 3 == 0) { // run test 1
 			// test for either option that function returns 0
-			r = playBaron(&G1, rand1, rand2, p);
+			r = baronCard(rand1, &G1, 0);
 			//printf("	Baron output for random test 1: %d\n", r);
 			assert(r==0);
 			//printf("		Input: %d:%d 	Supply: %d	Estate in hand: %d\n", rand1, rand2, supply_count, estate_count);	
-			assert(G1.numBuys == G2.numBuys + 1);
-			printf("		Test 1 passed\n");
+			if(G1.numBuys == G2.numBuys + 1) {
+				printf("		Test 1 passed\n");
+			}
+			else {
+				printf("		Test 1 failed: number of buys not incremented properly\n");
+			}
 		}
 		else if( i % 3 == 1 ) { // run test 2
-		//	if (i % 50 ==0) {
-		//	printf("	Supply Count = %d\n", G1.supplyCount[estate]);
-		//	}
+			//	if (i % 50 ==0) {
+			//	printf("	Supply Count = %d\n", G1.supplyCount[estate]);
+			//	}
 			// test for any integer value > 0 for choice 1
-			r = playBaron(&G1, rand3, 0, p);
+			r = baronCard(0, &G1, 0);
 			//printf("	Baron output for random test 2: %d\n", r);
 			assert(r==0);
 			//printf("		Input: %d 	Supply: %d	Estate in hand: %d\n", rand3, supply_count, estate_count);	
-			assert(G1.numBuys == G2.numBuys + 1);
+			if(G1.numBuys == G2.numBuys + 1) {
+				printf("		Test 2 passed\n");
+			}
+			else {
+				printf("		Test 2 failed: number of buys not incremented properly\n");
+			}
 			if(estate_count > 1) {
 				//assert(G1.coins == (G2.coins + 4));	
 				if(G1.coins != G2.coins + 4) { printf("     Test 2 failed: Coins for G1 (%d) != G2 + 4 (%d)\n", G1.coins, G2.coins + 4); }
@@ -119,11 +119,16 @@ int main() {
 		}
 		else if(i % 3 == 2) { // run test 3
 			// test for any integer value > 0 for choice 2
-			r = playBaron(&G1, 0, rand4, p);
+			r = baronCard(1, &G1, 0);
 			//printf("	Baron output for random test 3: %d\n", r);
 			assert(r==0);
 			//printf("		Input: %d 	Supply: %d	Estate in hand: %d\n", rand4, supply_count, estate_count);	
-			assert(G1.numBuys == G2.numBuys + 1);
+			if(G1.numBuys == G2.numBuys + 1) {
+				printf("		Test 3 passed\n");
+			}
+			else {
+				printf("		Test 3 failed: number of buys not incremented properly\n");
+			}
 			assert(G1.coins == G2.coins);
 			if(supply_count == 0) {
 				//assert(G1.supplyCount[estate] == (G2.supplyCount[estate]));
